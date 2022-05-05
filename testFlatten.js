@@ -1,11 +1,7 @@
 const Lib = require('./flatten.js');
 const flatten = Lib.flatten;
 const { deepEqual } = require('assert').strict;
-const report = {
-  passed: 0,
-  failed: 0,
-  total: 0
-}
+
 const makeTest = (desc, test) => {
   return { desc, test }
 }
@@ -13,14 +9,11 @@ const makeTest = (desc, test) => {
 const runTest = ({ desc, test }) => {
   let status = '✅';
   let errorMessage;
-  report.total++;
   try {
     test();
-    report.passed++;
   } catch (error) {
     status = '❌';
     errorMessage = error.message;
-    report.failed++;
   } finally {
     console.log(status, '-', desc);
     if (errorMessage) {
