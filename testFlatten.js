@@ -2,32 +2,30 @@ const Lib = require('./flatten.js');
 const flatten = Lib.flatten;
 const { deepEqual } = require('assert').strict;
 
-const makeTest = (msg, test) => {
-  return { msg, test }
+const makeTest = (message, test) => {
+  return { message, test }
 }
 
-const runTest = ({ msg, test }) => {
-  let status = '✅';
+const runTest = ({ message, test }) => {
+  let passed = true;
   let err;
   try {
-    test(msg);
+    test(message);
   } catch (error) {
-    err = {
-      actual: error.actual,
-      expected: error.expected,
-      message: error.message,
-    };
-    status = '❌';
+    err = error;
+    passed = false;
   } finally {
-    console.log(status, '-', msg);
     if (err) {
-      console.log(err);
+      return { passed, ...err, stack: err.stack, message: err.message };
+    }
+    return {
+      passed, message
     }
   }
 };
 
 const runTests = (tests) => {
-  tests.forEach(runTest);
+  return tests.map(runTest);
 };
 
 const tests = [
@@ -41,4 +39,33 @@ const tests = [
     return deepEqual(flatten([[[1], 2]]), [1], message);
   }),
 ];
-runTests(tests);
+const testData = runTests(tests);
+
+// reporter
+const printPassed = function (testCase) {
+  console.log('✅', '-', testCase.message);
+};
+
+const printFailed = function (testCase) {
+  console.log('❌', '-', testCase.message);
+  console.log({ actual: testCase.actual, expected: testCase.expected });
+};
+
+const reportGenerator = function (testData) {
+  const passed = testData.filter((x) => x.passed);
+  const failed = testData.filter((x) => !x.passed);
+
+  passed.forEach(printPassed);
+  console.log();
+  failed.forEach(printFailed);
+
+  console.log('\nreport:');
+  return {
+    totalCases: testData.length,
+    passedCases: passed.length,
+    failedCases: failed.length,
+  };
+};
+
+console.log(reportGenerator(testData));
+exports.testData = testData;
