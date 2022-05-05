@@ -8,16 +8,16 @@ const makeTest = (desc, test) => {
 
 const runTest = ({ desc, test }) => {
   let status = '✅';
-  let errorMessage;
+  let err;
   try {
     test();
   } catch (error) {
+    err = error;
     status = '❌';
-    errorMessage = error.message;
   } finally {
     console.log(status, '-', desc);
-    if (errorMessage) {
-      console.log(errorMessage);
+    if (err) {
+      console.log(err.message);
     }
   }
 };
@@ -29,7 +29,7 @@ const tests = [
   makeTest('Single index nested array', (desc) => {
     return deepEqual(flatten([[1]]), [1], desc);
   }),
-  makeTest("multi index nested array", (desc) => {
+  makeTest('multi index nested array', (desc) => {
     return deepEqual(flatten([[[1], 2]]), [1, 2], desc);
   }),
 ];
