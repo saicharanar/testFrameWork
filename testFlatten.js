@@ -22,6 +22,10 @@ const runTest = ({ desc, test }) => {
   }
 };
 
+const runTests = (tests) => {
+  tests.forEach(runTest);
+};
+
 const tests = [
   makeTest('Empty array', (desc) => {
     return deepEqual([], [], desc);
@@ -33,8 +37,4 @@ const tests = [
     return deepEqual(flatten([[[1], 2]]), [1, 2], desc);
   }),
 ];
-
-const runTests = (tests) => {
-  tests.forEach(runTest);
-};
 runTests(tests);
