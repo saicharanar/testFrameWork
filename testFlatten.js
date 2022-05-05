@@ -12,12 +12,16 @@ const runTest = ({ desc, test }) => {
   try {
     test(desc);
   } catch (error) {
-    err = error;
+    err = {
+      actual: error.actual,
+      expected: error.expected,
+      message: error.message,
+    };
     status = '❌';
   } finally {
     console.log(status, '-', desc);
     if (err) {
-      console.log(err.message);
+      console.log(err);
     }
   }
 };
@@ -34,7 +38,7 @@ const tests = [
     return deepEqual(flatten([[1]]), [1], desc);
   }),
   makeTest('multi index nested array', (desc) => {
-    return deepEqual(flatten([[[1], 2]]), [1, 2], desc);
+    return deepEqual(flatten([[[1], 2]]), [1], desc);
   }),
 ];
 runTests(tests);
