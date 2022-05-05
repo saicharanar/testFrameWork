@@ -10,7 +10,7 @@ const runTest = ({ desc, test }) => {
   let status = '✅';
   let err;
   try {
-    test();
+    test(desc);
   } catch (error) {
     err = error;
     status = '❌';
