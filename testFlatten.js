@@ -2,15 +2,15 @@ const Lib = require('./flatten.js');
 const flatten = Lib.flatten;
 const { deepEqual } = require('assert').strict;
 
-const makeTest = (desc, test) => {
-  return { desc, test }
+const makeTest = (msg, test) => {
+  return { msg, test }
 }
 
-const runTest = ({ desc, test }) => {
+const runTest = ({ msg, test }) => {
   let status = '✅';
   let err;
   try {
-    test(desc);
+    test(msg);
   } catch (error) {
     err = {
       actual: error.actual,
@@ -19,7 +19,7 @@ const runTest = ({ desc, test }) => {
     };
     status = '❌';
   } finally {
-    console.log(status, '-', desc);
+    console.log(status, '-', msg);
     if (err) {
       console.log(err);
     }
@@ -31,14 +31,14 @@ const runTests = (tests) => {
 };
 
 const tests = [
-  makeTest('Empty array', (desc) => {
-    return deepEqual([], [], desc);
+  makeTest('Empty array', () => {
+    return deepEqual([], [], 'Empty array');
   }),
-  makeTest('Single index nested array', (desc) => {
-    return deepEqual(flatten([[1]]), [1], desc);
+  makeTest('Single index nested array', (message) => {
+    return deepEqual(flatten([[1]]), [1], message);
   }),
-  makeTest('multi index nested array', (desc) => {
-    return deepEqual(flatten([[[1], 2]]), [1], desc);
+  makeTest('multi index nested array', (message) => {
+    return deepEqual(flatten([[[1], 2]]), [1], message);
   }),
 ];
 runTests(tests);
