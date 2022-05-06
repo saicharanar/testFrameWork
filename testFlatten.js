@@ -51,9 +51,15 @@ const printFailed = function (testCase) {
   console.log({ actual: testCase.actual, expected: testCase.expected });
 };
 
+const separateTests = function (testData) {
+  const isPassed = (x) => x.passed;
+  const isFailed = (x) => !x.passed;
+
+  return [testData.filter(isPassed), testData.filter(isFailed)];
+};
+
 const reportGenerator = function (testData) {
-  const passed = testData.filter((x) => x.passed);
-  const failed = testData.filter((x) => !x.passed);
+  const [passed, failed] = separateTests(testData);
 
   passed.forEach(printPassed);
   console.log();
